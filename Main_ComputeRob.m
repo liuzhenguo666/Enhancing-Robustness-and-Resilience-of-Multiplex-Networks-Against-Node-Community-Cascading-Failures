@@ -10,8 +10,10 @@ name{1,4} = 'SW_SF';
 numType = 4;
 %节点规模 N
 N = 500;
-% 画图所用的数据 每一行表示一个网络 每一列表示不同的度 
-RAtkMat = zeros(4,9);
+%设置保护节点的比例
+protectRate = 0.05;
+%计算保护节点的数量
+protectNodeNum = ceil(N * protectRate);
 % 用于实验的网络个数
 numNet =  100;
 % numNet =  1;
@@ -25,6 +27,8 @@ endDegree = 4;
 DegreeChange = startDegree:deltaD:endDegree;
 %平均度变化数量 numDegree
 [~,numDegree] = size(DegreeChange);
+% 画图所用的数据 每一行表示一个网络 每一列表示不同的度 
+RAtkMat = zeros(numType,DegreeChange);
 % 每一层表示一个网络 每一行表示一个平均度
 NodAtkMat = zeros(numDegree,N,numType);
 % 社区失效的阈值，当社区失效阈值为1时，等价于不考虑社区结构
@@ -45,11 +49,14 @@ for i = 1 : numType
             %从相应的文件夹中提取多重网络
             curFileName = strcat('Multi/',name{1,i},'/d=',num2str(d),'/',name{1,i},'_500_',num2str(d),'_',num2str(k),'.mat');
             adjMulti =  importdata(curFileName);
-            % 2. 进行社区划分
+            % 2.1 进行社区划分
             edgesAll = Adj2EdgesAll(adjMulti);
             %nodCom中提供了节点的社区信息
             [nodCom,Q] = ComDet(edgesAll);
             numCom = max(nodCom);
+            % 2.2 生成保护节点序列，以SA算法为例子
+            %[nodPro] = SA_protectNode(adjMulti,threshold,nodCom,protectNodeNum);
+            
             % 3. 计算当前保护节点的网络的攻击鲁棒性,无保护节点的情况即 nodPro 为空
             [R,nodSeq] = ComAtkRob(adjMulti,nodCom,threshold,nodPro);
             %计算当前保护节点的网络的恢复鲁棒性,无保护节点的情况即 nodPro 为空
