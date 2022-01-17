@@ -1,0 +1,2 @@
+# Enhancing-Robustness-and-Resilience-of-Multiplex-Networks-Against-Node-Community-Cascading-Failures
+This program is used to calculate simulated data and theoretical value data in related papers. "Main_ComputeRob" computes the attack/recovery robustness of different multi-networks without/with node protection strategy. "Main_PercolationTheoryFormulation" Calculates the theoretical curve of NCFs and NCCFs.
